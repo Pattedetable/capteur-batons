@@ -1,4 +1,4 @@
-# Radiohm
+# Capteur batons
 
 ![screenshot](https://raw.githubusercontent.com/Pattedetable/capteur-batons/master/images/capteur_screenshot.png)
 
