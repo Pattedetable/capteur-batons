@@ -40,6 +40,15 @@
         <translation>Accept</translation>
     </message>
     <message>
+        <source>Annuler</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <source>Voltage</source>
+        <translation>Voltage</translation>
+    </message>
+
+    <message>
         <source>Force</source>
         <translation>Force</translation>
     </message>

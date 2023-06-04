@@ -43,19 +43,22 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.btn2, 1, 0, 1, 2)
 
         self.btn3 = QtWidgets.QPushButton(self.centralwidget)
-        self.gridLayout.addWidget(self.btn3, 11, 0, 1, 2)
+        self.gridLayout.addWidget(self.btn3, 12, 0, 1, 2)
 
         self.btn4 = QtWidgets.QPushButton(self.centralwidget)
         self.gridLayout.addWidget(self.btn4, 2, 0, 1, 2)
 
         self.btn5 = QtWidgets.QPushButton(self.centralwidget)
-        self.gridLayout.addWidget(self.btn5, 12, 0, 1, 2)
+        self.gridLayout.addWidget(self.btn5, 13, 0, 1, 2)
 
         self.btn6 = QtWidgets.QPushButton(self.centralwidget)
         self.gridLayout.addWidget(self.btn6, 4, 0, 1, 2)
 
         self.btn7 = QtWidgets.QPushButton(self.centralwidget)
         self.gridLayout.addWidget(self.btn7, 9, 0, 1, 2)
+
+        self.btn8 = QtWidgets.QPushButton(self.centralwidget)
+        self.gridLayout.addWidget(self.btn8, 10, 0, 1, 2)
 
         self.label1 = QtWidgets.QLabel(self.centralwidget)
         self.label1.setText("M min")
@@ -92,14 +95,14 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.text4, 8, 1, 1, 1)
 
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem, 10, 0, 1, 2)
+        self.gridLayout.addItem(spacerItem, 11, 0, 1, 2)
 
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem2, 3, 0, 1, 2)
 
 
         self.plot = pg.PlotWidget()
-        self.gridLayout.addWidget(self.plot, 0, 2, 13, 1)
+        self.gridLayout.addWidget(self.plot, 0, 2, 14, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -107,19 +110,8 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.temps = 0.0
 
-        fichier = open("params.dat", "r")
-        lines = fichier.readlines()
-        contenu = []
-        for line in lines:
-            contenu.append(line.split(" "))
-#        print(contenu)
-        self.M_min = float(contenu[0][1])
-        self.V_min = float(contenu[1][1])
-        self.M_max = float(contenu[2][1])
-        self.V_max = float(contenu[3][1])
-        fichier.close()
+        self.readParams()
 
-#        print(self.M_min, self.V_min, self.M_max, self.V_max)
 
 ###########################################################
 
@@ -213,6 +205,7 @@ class Ui_MainWindow(object):
         self.btn5.clicked.connect(lambda: self.fermerEtAfficher())
         self.btn7.clicked.connect(lambda: self.updateParams())
         self.btn6.clicked.connect(lambda: self.checkDisabled())
+        self.btn8.clicked.connect(lambda: self.displayParams())
 
 
     def retranslateUi(self, MainWindow):
@@ -226,6 +219,7 @@ class Ui_MainWindow(object):
         self.btn5.setText(self._translate("MainWindow", "Quitter"))
         self.btn6.setText(self._translate("MainWindow", "Calibrer"))
         self.btn7.setText(self._translate("MainWindow", "Accepter"))
+        self.btn8.setText(self._translate("MainWindow", "Annuler"))
         self.plot.setLabel('left', text=self._translate("MainWindow", "Force"), units='N')
         #self.plot.setLabel('bottom', text=self._translate("MainWindow", "Position"), units='m')
 
@@ -233,8 +227,14 @@ class Ui_MainWindow(object):
     def checkDisabled(self):
         if self.btn7.isEnabled():
             self.disableCalibrate(True)
+            self.pente = (self.M_min - self.M_max)/(self.V_min - self.V_max)
+            self.ordonnee = - self.pente*self.V_min
+            self.plot.setLabel('left', text=self._translate("MainWindow", "Force"), units='N')
         else:
             self.disableCalibrate(False)
+            self.pente = 1.0/9.81
+            self.ordonnee = 0.0
+            self.plot.setLabel('left', text=self._translate("MainWindow", "Voltage"))
 
 
     def disableCalibrate(self, choix):
@@ -243,7 +243,22 @@ class Ui_MainWindow(object):
         self.text3.setDisabled(choix)
         self.text4.setDisabled(choix)
         self.btn7.setDisabled(choix)
+        self.btn8.setDisabled(choix)
 
+
+    def readParams(self):
+        fichier = open("params.dat", "r")
+        lines = fichier.readlines()
+        contenu = []
+        for line in lines:
+            contenu.append(line.split(" "))
+#        print(contenu)
+        self.M_min = float(contenu[0][1])
+        self.V_min = float(contenu[1][1])
+        self.M_max = float(contenu[2][1])
+        self.V_max = float(contenu[3][1])
+        fichier.close()
+#        print(self.M_min, self.V_min, self.M_max, self.V_max)
 
     def displayParams(self):
         self.text1.setText(str(self.M_min))
@@ -257,9 +272,9 @@ class Ui_MainWindow(object):
         self.V_min = float(self.text2.text())
         self.M_max = float(self.text3.text())
         self.V_max = float(self.text4.text())
+        self.writeParams()
         self.pente = (self.M_min - self.M_max)/(self.V_min - self.V_max)
         self.ordonnee = - self.pente*self.V_min
-        self.writeParams()
         self.disableCalibrate(True)
 
 
