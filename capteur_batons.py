@@ -58,4 +58,4 @@ ui_Window.setupUi(window, None)
 
 # Make main window appear
 window.show()
-sys.exit(app.exec_())
+sys.exit(app.exec())
