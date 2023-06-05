@@ -18,8 +18,8 @@
 
 """ Initialize windows and make the main window appear """
 import sys
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt6 import QtCore
+from PyQt6.QtWidgets import QApplication, QMainWindow
 import glob, os
 import platform
 import locale, ctypes

@@ -18,7 +18,7 @@
 
 import serial, io
 import serial.tools.list_ports
-from PyQt5 import QtGui, QtWidgets
+from PyQt6 import QtGui, QtWidgets
 import pyqtgraph as pg
 import numpy as np
 import matplotlib.pyplot as plt
