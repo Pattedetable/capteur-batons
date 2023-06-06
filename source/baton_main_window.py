@@ -269,6 +269,10 @@ class Ui_MainWindow(object):
         self.text2.setText(str(self.V_min))
         self.text3.setText(str(self.M_max))
         self.text4.setText(str(self.V_max))
+        self.pente = (self.M_min - self.M_max)/(self.V_min - self.V_max)
+        self.ordonnee = - self.pente*self.V_min
+        self.plot.setLabel('left', text=self._translate("MainWindow", "Force"), units='N')
+        self.disableCalibrate(True)
 
 
     def updateParams(self):
@@ -279,6 +283,7 @@ class Ui_MainWindow(object):
         self.writeParams()
         self.pente = (self.M_min - self.M_max)/(self.V_min - self.V_max)
         self.ordonnee = - self.pente*self.V_min
+        self.plot.setLabel('left', text=self._translate("MainWindow", "Force"), units='N')
         self.disableCalibrate(True)
 
 
