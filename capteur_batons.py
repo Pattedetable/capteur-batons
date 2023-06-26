@@ -19,7 +19,7 @@
 """ Initialize windows and make the main window appear """
 import sys
 from PyQt6 import QtCore
-from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtWidgets import QApplication, QMainWindow, QDialog
 import glob, os
 import platform
 import locale, ctypes
@@ -30,11 +30,12 @@ for result in results:
         sys.path.insert(1, result)
 
 import baton_main_window
-
+import dialog_baton
 
 # Initialize windows
 app = QApplication(sys.argv)
 window = QMainWindow()
+dialog = QDialog()
 
 systeme_exploitation = platform.system()
 if systeme_exploitation == 'Windows':
@@ -53,8 +54,10 @@ translator.load(langue, directory)
 app.installTranslator(translator)
 
 ui_Window = baton_main_window.Ui_MainWindow()
+ui_Dial = dialog_baton.Ui_Dialog()
 
-ui_Window.setupUi(window, None)
+ui_Dial.setupUi(dialog)
+ui_Window.setupUi(window, dialog, ui_Dial, None)
 
 # Make main window appear
 window.show()

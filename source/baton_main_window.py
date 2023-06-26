@@ -27,7 +27,7 @@ import platform, os, time
 import locale, ctypes
 
 class Ui_MainWindow(object):
-    def setupUi(self, MainWindow, parent):
+    def setupUi(self, MainWindow, Dialog, ui_Dialog, parent):
 
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1200, 800)
@@ -106,6 +106,34 @@ class Ui_MainWindow(object):
 
         MainWindow.setCentralWidget(self.centralwidget)
 
+
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1001, 25))
+        self.menubar.setObjectName("menubar")
+        self.menu_aide = QtWidgets.QMenu(self.menubar)
+        self.menu_aide.setObjectName("menu_aide")
+        MainWindow.setMenuBar(self.menubar)
+        self.action_translate = QtWidgets.QMenu(MainWindow)
+        self.action_translate.setObjectName("action_translate")
+        self.menu_aide.addMenu(self.action_translate)
+
+        self.action_fr = QtGui.QAction(MainWindow)
+        self.action_fr.setObjectName("action_fr")
+        self.action_translate.addAction(self.action_fr)
+        self.action_en = QtGui.QAction(MainWindow)
+        self.action_en.setObjectName("action_en")
+        self.action_translate.addAction(self.action_en)
+
+        self.action_propos = QtGui.QAction(MainWindow)
+        self.action_propos.setObjectName("action_propos")
+        self.menu_aide.addAction(self.action_propos)
+
+        self.menubar.addAction(self.menu_aide.menuAction())
+
+
         # Initial parameters
         self.retranslateUi(MainWindow)
         self.temps = 0.0
@@ -117,7 +145,7 @@ class Ui_MainWindow(object):
 
 # Parameters tests
 
-        # Strain 1 (pour petites charges)
+#        # Strain 1 (pour petites charges)
 #        self.V_min = 342.0
 #        self.M_min = 0.0 # Masse en g
 #        self.V_max = 127.0
@@ -210,6 +238,9 @@ class Ui_MainWindow(object):
         self.btn7.clicked.connect(lambda: self.updateParams())
         self.btn6.clicked.connect(lambda: self.checkDisabled())
         self.btn8.clicked.connect(lambda: self.displayParams())
+        self.action_propos.triggered.connect(lambda: Dialog.show())
+        self.action_fr.triggered.connect(lambda: self.traduire(MainWindow, Dialog, ui_Dialog, "fr_CA"))
+        self.action_en.triggered.connect(lambda: self.traduire(MainWindow, Dialog, ui_Dialog, "en_CA"))
 
 
     def retranslateUi(self, MainWindow):
@@ -224,9 +255,22 @@ class Ui_MainWindow(object):
         self.btn6.setText(self._translate("MainWindow", "Calibrer"))
         self.btn7.setText(self._translate("MainWindow", "Accepter"))
         self.btn8.setText(self._translate("MainWindow", "Annuler"))
+        self.menu_aide.setTitle(self._translate("MainWindow", "Options"))
+        self.action_propos.setText(self._translate("MainWindow", "À propos"))
+        self.action_translate.setTitle(self._translate("MainWindow", "Langue"))
+        self.action_fr.setText(self._translate("MainWindow", "Français"))
+        self.action_en.setText(self._translate("MainWindow", "English"))
         self.plot.setLabel('left', text=self._translate("MainWindow", "Force"), units='N')
         #self.plot.setLabel('bottom', text=self._translate("MainWindow", "Position"), units='m')
 
+
+    def traduire(self, MainWindow, Dialog, ui_Dialog, langue):
+        directory = "locales"
+        self.translator = QtCore.QTranslator()
+        self.translator.load(langue, directory)
+        QtCore.QCoreApplication.installTranslator(self.translator)
+        self.retranslateUi(MainWindow)
+        ui_Dialog.retranslateUi(Dialog)
 
     def checkDisabled(self):
         if self.btn7.isEnabled():
@@ -240,6 +284,9 @@ class Ui_MainWindow(object):
             self.ordonnee = 0.0
             self.plot.setLabel('left', text=self._translate("MainWindow", "Voltage"))
 
+    def fermerEtAfficher(self):
+        app = QtWidgets.QApplication.instance()
+        app.closeAllWindows()
 
     def disableCalibrate(self, choix):
         self.text1.setDisabled(choix)

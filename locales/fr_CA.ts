@@ -71,5 +71,28 @@
         <source>d'un fichier</source>
         <translation>d'un fichier</translation>
     </message>
+    <message>
+        <source>Options</source>
+        <translation>Options</translation>
+    </message>
+    <message>
+        <source>À propos</source>
+        <translation>À propos</translation>
+    </message>
+    <message>
+        <source>Langue</source>
+        <translation>Langue</translation>
+    </message>
+</context>
+<context>
+    <name>Dialog</name>
+    <message>
+        <source>À propos</source>
+        <translation>À propos</translation>
+    </message>
+    <message>
+        <source>Fermer</source>
+        <translation>Fermer</translation>
+    </message>
 </context>
 </TS>
